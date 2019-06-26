@@ -13,8 +13,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-// import {CsvParser} from "./CsvParser";
-// import {SimpleDataGrapher} from "./SimpleDataGrapher";
 var CsvParser = require('./CsvParser');
 
 var SimpleDataGrapher = require('./SimpleDataGrapher');
@@ -28,6 +26,7 @@ var View =
 function () {
   _createClass(View, [{
     key: "handleFileSelectlocal",
+    //extracts the uploaded file from input field and creates an object of CsvParser class with the file as one of the parameters
     value: function handleFileSelectlocal(event) {
       this.csvFile = event.target.files[0];
       console.log(event.target.files[0]);
@@ -44,12 +43,12 @@ function () {
           self.csvParser = new CsvParser(self.csvFile, self.elementId, "local");
         };
       }
-    }
+    } //receives the string value and creates an object of CsvParser class with the string as one of the parameters
+
   }, {
     key: "handleFileSelectstring",
     value: function handleFileSelectstring(val) {
-      console.log("i am at csv string handler", val); // var csv_string = val.split("\n");
-
+      console.log("i am at csv string handler", val);
       this.csvFile = val;
       var self = this;
 
@@ -57,7 +56,8 @@ function () {
         console.log("i am uploading");
         self.csvParser = new CsvParser(self.csvFile, self.elementId, "csvstring");
       };
-    }
+    } //receives the JSON file value and creates an object of CsvParser class with the file as one of the parameters
+
   }, {
     key: "handleFileSelectGoogleSheet",
     value: function handleFileSelectGoogleSheet(googleSheetData) {
@@ -67,7 +67,8 @@ function () {
       document.getElementById(this.uploadButtonId).onclick = function (e) {
         self.csvParser = new CsvParser(self.csvFile, self.elementId, "googleSheet");
       };
-    }
+    } // get's the JSON form of the Google Sheet through Google Sheet's URL and passes it to the handler
+
   }, {
     key: "getValueGoogleSheet",
     value: function getValueGoogleSheet(googleSheetLink) {
@@ -75,7 +76,8 @@ function () {
       $.getJSON(googleSheetLink, function (data) {
         self.handleFileSelectGoogleSheet(data.feed.entry);
       });
-    }
+    } // uses a CORS proxy to fetch the value of a remote files and passes the received value to a callback function
+
   }, {
     key: "sendRemoteFileToHandler",
     value: function sendRemoteFileToHandler(val) {
@@ -90,7 +92,8 @@ function () {
       })["catch"](function (e) {
         return console.log(e);
       });
-    }
+    } // callback function which receives the remote file's value and creates an object of CsvParser class with the file as one of the parameters
+
   }, {
     key: "handleFileSelectremote",
     value: function handleFileSelectremote(remoteVal) {
@@ -102,7 +105,8 @@ function () {
         console.log("i am uploading");
         self.csvParser = new CsvParser(self.csvFile, self.elementId, "remote");
       };
-    }
+    } // adapter function which switches between Plotly.js and Chart.js as a graph plotting library and creates theri respective objects which take over the graph plotting
+
   }, {
     key: "plotGraph",
     value: function plotGraph(hash, length, type, flag, library) {
@@ -113,7 +117,8 @@ function () {
       }
 
       $('.' + this.carousalClass).carousel(2);
-    }
+    } // creates a downloadable spreadsheet for the imported data using SheetJS
+
   }, {
     key: "createSheet",
     value: function createSheet() {
@@ -145,7 +150,9 @@ function () {
       saveAs(new Blob([s2ab(wbout)], {
         type: "application/octet-stream"
       }), 'newSpreadsheet' + this.elementId + '.xlsx');
-    }
+    } // creates a hash of the entire data in an accesible format for the charting libraries {labels: [legendx, [legendy0, legendy1 ... lengendyn]], x_axis_values: [...], y_axis_0: [...], y_axis_1: [...], ... y_axis_n: [...]} n: selected number of columns
+    // flag is just for seeing if we're plotting the graph for the first time, if yes, we will have to clear the canvas.
+
   }, {
     key: "afterSampleData",
     value: function afterSampleData(flag) {
@@ -179,7 +186,8 @@ function () {
 
         _this2.plotGraph(hash, columns.length, type, flag, "plotly");
       };
-    }
+    } // generates a graph menu with different graph options
+
   }, {
     key: "graphMenu",
     value: function graphMenu() {
@@ -211,7 +219,8 @@ function () {
 
         document.getElementById(this.graphMenuId).appendChild(tr);
       }
-    }
+    } // generates the sample table data with checkboxes for y-axis and radio buttons for x-axis
+
   }, {
     key: "tableGenerator",
     value: function tableGenerator(name, tableId, typeOfInput, validValues, flag, tableType, badgeType) {
@@ -260,7 +269,8 @@ function () {
       }
 
       this.afterSampleData(flag);
-    }
+    } // renders the sample tables
+
   }, {
     key: "showSampleDataXandY",
     value: function showSampleDataXandY() {
@@ -283,7 +293,8 @@ function () {
       this.tableGenerator(this.tableXInputName, this.tableXId, 'radio', this.csvParser.csvHeaders, true, 'table-success', 'badge-success');
       this.tableGenerator(this.tableYInputName, this.tableYId, 'checkbox', this.csvParser.csvValidForYAxis, true, 'table-warning', 'badge-warning');
       this.graphMenu();
-    }
+    } // view manipulation resumes after the CsvParser object is created and returned
+
   }, {
     key: "continueViewManipulation",
     value: function continueViewManipulation(x) {
@@ -409,7 +420,8 @@ function () {
       $('#' + _this4.tableXParentId).toggle(ixx === 0);
       $('#' + _this4.tableYParentId).toggle(ixx === 1);
     });
-  }
+  } //listen for different inputs for import by the user
+
 
   _createClass(View, [{
     key: "addListeners",
@@ -443,7 +455,8 @@ function () {
       $("#" + this.createSpreadsheetButtonId).click(function () {
         _this5.createSheet();
       });
-    }
+    } //renders the entire HTML view
+
   }, {
     key: "drawHTMLView",
     value: function drawHTMLView() {
